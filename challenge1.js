@@ -1,8 +1,12 @@
-function getGrade() {
+function getStudentGrade() {
   // Asks user to input marks
+
   let marks = prompt("Enter student marks (between 0 and 100):");
+
   marks = Number(marks);
+
   // Checks if marks are between 0 and 100
+  
   if (marks < 0 || marks > 100 || isNaN(marks)) {
     console.log("Invalid input. Please enter a number between 0 and 100.");
     return;

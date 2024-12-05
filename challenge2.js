@@ -1,17 +1,22 @@
-function checkSpeed() {
-    // Asks user to enter speed of car
-  let speed = prompt("Enter speed of the car:");
-  // Defeine speed limit
+function checkSpeed(speed) {
   const speedLimit = 70;
+  const demeritThreshold = 12;
+
+  // If speed is less than or equal to the limit
   if (speed <= speedLimit) {
-    console.log("Ok");
+      console.log("Ok");
   } else {
-    // Culculates number of demerit points
-    let demeritPoints = Math.floor((speed - speedLimit) / 5);
-    if (demeritPoints > 12) {
-      console.log("Lincense sespended");
-    } else {
-      console.log("Points:" + demeritPoints);
-    }
+      // Calculate how much the speed exceeds the limit
+      const excessSpeed = speed - speedLimit;
+      
+      // Calculate the number of demerit points 
+      const demeritPoints = Math.floor(excessSpeed / 5);
+
+      // Output demerit points or license suspension if points exceed the threshold
+      if (demeritPoints > demeritThreshold) {
+          console.log("License suspended");
+      } else {
+          console.log(`Points: ${demeritPoints}`);
+      }
   }
 }

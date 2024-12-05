@@ -1,25 +1,29 @@
-function calculateSalary() {
-    // Input basic salary and benefits
-    let basicSalary = prompt("Enter Basic Salary:");
-    let benefits = prompt("Enter Benefits:");
+function calculateNetSalary(basicSalary, benefits) {
+    
+    const taxBrackets = [
+        { limit: 24000, rate: 0.10 },
+        { limit: 40000, rate: 0.15 },
+        { limit: 60000, rate: 0.20 },
+        { limit: 100000, rate: 0.25 },
+        { limit: Infinity, rate: 0.30 },
+    ];
 
-    // Gross salary = Basic Salary + Benefits
+    // Calculate Gross Salary
     let grossSalary = basicSalary + benefits;
 
-    // KRA Tax bands and rates 
+    // Calculate PAYE 
     let tax = 0;
-    
-    if (grossSalary <= 24000) {
-        tax = grossSalary * 0.10; // 10% tax for up to 24,000 KES
-    } else if (grossSalary <= 48000) {
-        tax = 2400 + (grossSalary - 24000) * 0.15; // 15% tax for 24,001 to 48,000
-    } else if (grossSalary <= 72000) {
-        tax = 4800 + (grossSalary - 48000) * 0.20; // 20% tax for 48,001 to 72,000
-    } else {
-        tax = 8800 + (grossSalary - 72000) * 0.25; // 25% tax for above 72,000
+    let remainingSalary = grossSalary;
+
+    for (let i = taxBrackets.length - 1; i >= 0; i--) {
+        const bracket = taxBrackets[i];
+        if (remainingSalary > bracket.limit) {
+            tax += (remainingSalary - bracket.limit) * bracket.rate;
+            remainingSalary = bracket.limit;
+        }
     }
 
-    // NHIF deductions 
+    // Calculate NHIF Deduction
     let nhifDeduction = 0;
     if (grossSalary <= 5999) {
         nhifDeduction = 150;
@@ -27,35 +31,26 @@ function calculateSalary() {
         nhifDeduction = 300;
     } else if (grossSalary <= 11999) {
         nhifDeduction = 400;
-    } else if (grossSalary <= 14999) {
-        nhifDeduction = 500;
-    } else if (grossSalary <= 19999) {
-        nhifDeduction = 600;
-    } else if (grossSalary <= 24999) {
-        nhifDeduction = 750;
-    } else if (grossSalary <= 29999) {
-        nhifDeduction = 850;
-    } else if (grossSalary <= 34999) {
-        nhifDeduction = 900;
     } else {
-        nhifDeduction = 1000; // For higher salaries
+        nhifDeduction = 500;
     }
 
-    // NSSF deductions 
-    let nssfDeduction = grossSalary * 0.06; // 6% of gross salary 
+    // Calculate NSSF Deduction (Assumed 6% of basic salary)
+    const nssfDeduction = basicSalary * 0.06; // capped at 200 KES
+    const cappedNSSF = Math.min(nssfDeduction, 200);
 
-    // Calculate the net salary
-    let totalDeductions = tax + nhifDeduction + nssfDeduction;
-    let netSalary = grossSalary - totalDeductions;
+    // Calculate Net Salary
+    const totalDeductions = tax + nhifDeduction + cappedNSSF;
+    const netSalary = grossSalary - totalDeductions;
 
-    // Output the details
-    console.log("Gross Salary: KES " + grossSalary);
-    console.log("Payee Tax: KES " + tax);
-    console.log("NHIF Deduction: KES " + nhifDeduction);
-    console.log("NSSF Deduction: KES " + nssfDeduction);
-    console.log("Total Deductions: KES " + totalDeductions);
-    console.log("Net Salary: KES " + netSalary);
+    // Output results
+    console.log(`Gross Salary: KES ${grossSalary}`);
+    console.log(`PAYE (Tax): KES ${tax}`);
+    console.log(`NHIF Deduction: KES ${nhifDeduction}`);
+    console.log(`NSSF Deduction: KES ${cappedNSSF}`);
+    console.log(`Total Deductions: KES ${totalDeductions}`);
+    console.log(`Net Salary: KES ${netSalary}`);
 }
 
-// Call the function to test it
-calculateSalary();
+
+calculateNetSalary(basicSalary, benefits);
