@@ -52,5 +52,8 @@ function calculateNetSalary(basicSalary, benefits) {
     console.log(`Net Salary: KES ${netSalary}`);
 }
 
+// Example usage with basicSalary and benefits
+const basicSalary = 50000; // Example basic salary
+const benefits = 10000; // Example benefits
 
 calculateNetSalary(basicSalary, benefits);
